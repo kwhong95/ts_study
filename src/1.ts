@@ -1,2 +1,15 @@
-const v1: number | string = 123;
-const v2 = () => console.log('123');
+
+
+const enum Fruit {
+    Apple,
+    Banana,
+    Orange,
+}
+const fruit: Fruit = Fruit.Apple;
+
+const enum Language {
+    Korean = 'ko',
+    English = 'en',
+    Japanese = 'jp',
+}
+const lang: Language = Language.Korean;

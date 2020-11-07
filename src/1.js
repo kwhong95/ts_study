@@ -1,3 +1,3 @@
 "use strict";
-const v1 = 123;
-const v2 = () => console.log('123');
+const fruit = 0 /* Apple */;
+const lang = "ko" /* Korean */;
