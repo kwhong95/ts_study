@@ -80,7 +80,7 @@ const totalParts = product.;
 
 > 결론은! 생산성이 높아짐
 
-## 3, 타입스크립트 설치 ~ 컴파일
+## 3. 타입스크립트 설치 ~ 컴파일
 1. 프로젝트 폴터를 생성
 2. package.json 생성
 ```
@@ -121,3 +121,12 @@ const v2 = () => console.log('123');
 
 - 위처럼 타입에 대한 정보는 제외하고 컴파일 됨
     + 타입 정보는 JS 엔진에선 파싱이 불가능
+
+### 더욱 간편하게 컴파일 결과 확인하기
+1. VScode의 `Code Runner` 활용하기
+- 설치 후, 출력을 원하는 부분의 코드 드래그!
+- Control + Option + N 
+- Output에 실행 결과 똭!
+
+2. TS의 플레이라운드 사이트 이용하기
+- [이곳으로!!!](www.typescriptlang.org/play)
