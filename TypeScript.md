@@ -129,4 +129,4 @@ const v2 = () => console.log('123');
 - Output에 실행 결과 똭!
 
 2. TS의 플레이라운드 사이트 이용하기
-- [이곳으로!!!](www.typescriptlang.org/play)
+- [이곳으로!!!](http://www.typescriptlang.org/play)
