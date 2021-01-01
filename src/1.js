@@ -1,3 +1,7 @@
 "use strict";
-const fruit = 0 /* Apple */;
-const lang = "ko" /* Korean */;
+function getText(name, age = 15, language = 'korean') {
+    return '';
+}
+console.log(getText('mike'));
+console.log(getText('mike', 23));
+console.log(getText('jone', 36, 'english'));

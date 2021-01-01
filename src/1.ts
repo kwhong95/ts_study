@@ -1,15 +1,6 @@
-
-
-const enum Fruit {
-    Apple,
-    Banana,
-    Orange,
+function getText(name: string, age: number = 15, language = 'korean'): string {
+    return '';
 }
-const fruit: Fruit = Fruit.Apple;
-
-const enum Language {
-    Korean = 'ko',
-    English = 'en',
-    Japanese = 'jp',
-}
-const lang: Language = Language.Korean;
+console.log(getText('mike'));
+console.log(getText('mike',23));
+console.log(getText('jone', 36, 'english'));
