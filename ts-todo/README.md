@@ -202,3 +202,112 @@ if(command) {
 
 
 > App State에 임시로 세팅한 List들이 출력됨!
+
+## 3. Todo 추가하기
+### 3.1 새로운 Todo Command 생성하기
+```ts
+export class CommandNewTodo extends Command {
+  constructor() {
+    super('n', '할 일 추가하기');
+  }
+  async run(): Promise<void> {
+    const title = await waitForInput('title: ');
+    const priorityStr = await waitForInput('priority: ');
+    const priority = Number(priorityStr);
+    if(title && CommandNewTodo.getIsPriority(priority)) {
+      //
+    }
+  }
+  static getIsPriority(priority: number): priority is Priority{
+    return getIsVaildEnumValue(Priority, priority);
+  }
+}
+```
+- 추가하는 커맨드와 맞게 super 매개변수 입력을 수정해주고  
+  title 과 priority의 입력을 받을 수 있도록 설정함
+- Priority가 Emum 타입인지 검사하기 위해 util.ts에 만든 기능을 활용함
+- title과 priority가 있다면 todo를 출력하는 기능을 작성하면 됨
+
+### 3.2 Commond 추가하기
+```ts
+const commands: Command[] = [new CommandPrintTodos(), new CommandNewTodo()];
+```
+- `index.ts`에 `new ...()`로 Command를 불러옴
+
+### 3.3 Priority 구체화하기
+```ts
+export const PRIORITY_NAME_MAP: { [key in Priority]: string } = {
+  [Priority.High]: '높음',
+  [Priority.Medium]: '중간',
+  [Priority.Low]: '낮음',
+}
+```
+- Priority를 입력할 때 숫자를 입력하고 있고 사용자들에게 정보를 알려주기 위해  
+  구체화를 MAP을 통해서 관리함
+
+### 3.4 Command 추가 기능 구체화하기 (Action Type - 추가 로직 작성)
+```ts
+export interface ActionNewTodo {
+  type: 'newTodo';
+  title: string;
+  priority: Priority;
+};
+
+export type Action = ActionNewTodo;
+```
+- title 과 prioriry를 통해 새로운 Todo를 작성하는 interface를 만듬
+- type은 식별 가능한 유니온 타입으로 만들기 위해 작성
+- 다른 Action이 추가 될 때 어떤 것인지 구분 위해 Action 타입을 따로 지정함
+
+```ts
+if (title && CommandNewTodo.getIsPriority(priority)) {
+      return {
+        type: 'newTodo',
+        title,
+        priority,
+      };
+    }
+```
+> 새로운 Todo List를 추가하는 로직을 작성함  
+```ts
+// 자식
+Promise<ActionNewTodo| any>
+
+// 부모
+Promise<Action | void>
+```
+> 각 Command 의 Promise 반환 타입을 추가함
+
+## 3.5 메인 함수에 적용하기
+```ts
+function getNextState(state: AppState, action: Action): AppState {
+  switch (action.type) {
+    case 'newTodo':
+      return {
+        ...state,
+        todos: [...state.todos, new Todo(action.title, action.priority)],
+      };
+  }
+}
+```
+- AppState 현재 상태와 Action을 입력으로 받아서 다음 상태를 반환해주는 함수
+- 즉, newTodo라는 액션을 통해 새로운 Todo 리스트를 반환함
+  + `...state`는 기존 state를 직접 수정하는게 아닌 불변 객체로 관리함
+  + 불변 객체의 장점이 분명하고 리덕스에서 자주 사용함
+
+### 3.6 결과 확인하기
+<img width="297" alt="스크린샷 2021-01-03 오후 8 06 29" src="https://user-images.githubusercontent.com/70752848/103477183-729fb300-4dff-11eb-852c-122f04778812.png">
+
+> n 을 입력해서 새로운 todo를 입력할 수 있는 Command를 호출!
+
+<img width="297" alt="스크린샷 2021-01-03 오후 8 07 04" src="https://user-images.githubusercontent.com/70752848/103477184-73d0e000-4dff-11eb-9c08-8f8146e449fc.png">
+
+> 새로운 title과 priority를 입력하고 Enter!
+
+<img width="297" alt="스크린샷 2021-01-03 오후 8 07 18" src="https://user-images.githubusercontent.com/70752848/103477185-75020d00-4dff-11eb-8420-12bc36456899.png">
+
+> 다시 초기화면으로 복귀한 뒤, p를 입력해 할 일 목록을 출력하면!?
+
+<img width="297" alt="스크린샷 2021-01-03 오후 8 07 39" src="https://user-images.githubusercontent.com/70752848/103477188-76333a00-4dff-11eb-8022-1bf12e0b018b.png">
+
+> 짜잔! 새로운 항목 추가 완료요~
