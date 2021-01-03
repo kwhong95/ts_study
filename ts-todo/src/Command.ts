@@ -8,18 +8,19 @@ import {
   PRIORITY_NAME_MAP 
 } from "./type";
 import { getIsVaildEnumValue } from "./util";
+import chalk from "chalk";
 
 export abstract class Command {
   constructor(public key: string, private desc: string) {}
   toString() {
-    return `${this.key}: ${this.desc}`;
+    return chalk`{blue.bold ${this.key}}: ${this.desc}`;
   }
-  abstract async run(state: AppState): Promise<Action | void>;
+  abstract run(state: AppState): Promise<Action | void>;
 }
 
 export class CommandPrintTodos extends Command {
   constructor() {
-    super('p', '모든 할 일 출력하기');
+    super('p', chalk`모든 할 일 {red.bold 출력}하기`);
   }
   async run(state: AppState): Promise<void> {
     for (const todo of state.todos) {
@@ -32,7 +33,7 @@ export class CommandPrintTodos extends Command {
 
 export class CommandNewTodo extends Command {
   constructor() {
-    super('n', '할 일 추가하기');
+    super('n', chalk`할 일 {red.bold 추가}하기`);
   }
   async run(): Promise<ActionNewTodo| any> {
     const title = await waitForInput('title: ');
@@ -53,7 +54,7 @@ export class CommandNewTodo extends Command {
 
 export class CommandDeleteTodo extends Command {
   constructor() {
-    super('d', '할 일 제거하기');
+    super('d', chalk`할 일 {red.bold 제거}하기`);
   }
   async run(state: AppState): Promise<ActionDeleteTodo| any> {
     for ( const todo of state.todos ) {

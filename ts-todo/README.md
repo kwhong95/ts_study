@@ -384,3 +384,57 @@ function getNextState(state: AppState, action: Action): AppState {
 <img width="297" alt="스크린샷 2021-01-03 오후 9 38 07" src="https://user-images.githubusercontent.com/70752848/103478733-0bd4c680-4e0c-11eb-875e-26921f90d433.png">
 
 > 짜짠! 입력한 2번 Todo 가 삭제된 것을 볼수 있습니다!
+
+## 5. 프로젝트 마무리
+> 마지막은! 재밌게 콘솔에 스타일을 입히는 chalk 패키지를 사용해 마무리!
+
+### 5.1 chalk 사용 방법
+```ts
+console.log(chalk`aaa bbb ccc`);
+console.log(chalk`aaa {bold bbb} ccc`);
+console.log(chalk`aaa {yellow bbb} ccc`);
+console.log(chalk`aaa {yellow.bold bbb} ccc`);
+```
+- 이렇게 스타일을 적용하고 싶은 곳에 {}(중괄호)를 입력하고  
+  왼쪽에는 스타일 정보 오른쪽엔 텍스트를 적어주면 됨
+
+### 5.2 Tagged Template Literals - ES6
+```ts
+console.log(typeof chalk)
+```
+- chalk 는 함수 타입인것을 확인할 수 있음
+- ES6에 추가된 문법으로 함수 뒤에 ``(Template Literals)를  
+통해 입력한 정보들을 입력할 수 있음
+
+### 5.3 chalk를 이용해 스타일 적용하기
+```ts
+const PRIORITY_STYLE_MAP: { [key in Priority]: string } = {
+  [Priority.High]: 'red.bold',
+  [Priority.Medium]: 'grey.bold',
+  [Priority.Low]: 'yellow.bold',
+}
+```
+- 우선, 중요도에 따라서 다른 스타일을 적용시킴
+
+```ts
+toString() {
+  return chalk`{blue.bold ${this.id})} 제목: {bold ${this.title}}
+  (우선순위: {${PRIORITY_STYLE_MAP[this.priority]} ${
+    PRIORITY_NAME_MAP[this.priority]
+  }})`;
+}
+```
+- 다음은, `toString()` 메서드의 출력 부분을 맵을 활용해서 스타일 적용
+ 
+ ### 5.4 결과 확인하기
+<img width="297" alt="스크린샷 2021-01-03 오후 10 12 35" src="https://user-images.githubusercontent.com/70752848/103479427-dbdbf200-4e10-11eb-9a7f-32b7c788e455.png">
+
+> 이부분은 따로 작성해서 보이진 않았지만 Command 키워드와 중요부분에  
+스타일을 적용해 보았습니다!
+
+<img width="297" alt="스크린샷 2021-01-03 오후 10 12 39" src="https://user-images.githubusercontent.com/70752848/103479429-dd0d1f00-4e10-11eb-9175-f83daf6ba750.png">
+
+> 훨씬 좋아보이죠? 이렇게 우선 순위에 따라서 색도 다르고 중요한 부분에  
+스타일을 적용하니 깔끔해보이네요!
+
+### 5.5 끝!@!@!@!@@
