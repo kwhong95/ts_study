@@ -311,3 +311,76 @@ function getNextState(state: AppState, action: Action): AppState {
 <img width="297" alt="스크린샷 2021-01-03 오후 8 07 39" src="https://user-images.githubusercontent.com/70752848/103477188-76333a00-4dff-11eb-8022-1bf12e0b018b.png">
 
 > 짜잔! 새로운 항목 추가 완료요~
+
+## 4. Todo 삭제하기
+### 4.1 Action Type 추가하기
+```ts
+export interface ActionDeleteTodo {
+  type: 'deleteTodo';
+  id: number;
+}
+```
+- 이름과 같게 type을 추가하고 id 값을 사용할 예정임
+
+### 4.2 Delete Command 생성하기
+```ts
+export class CommandDeleteTodo extends Command {
+  constructor() {
+    super('n', '할 일 제거하기');
+  }
+  async run(state: AppState): Promise<ActionDeleteTodo| any> {
+    for ( const todo of state.todos ) {
+      const text = todo.toString();
+      console.log(text);
+    }
+    const idStr = await waitForInput('press todo id to delete: ');
+    const id = Number(idStr);
+    return {
+      type: 'deleteTodo',
+      id,
+    };
+  }
+}
+```
+- 삭제를 하기 위해선 현재 Todo 리스트를 보는 것이 좋을 것이기에 출력함
+- 삭제할 Todo의 id를 입력할 수 있는 Input을 설정함
+- Todo의 id와 입력한 id 값이 일치하면 deleteTodo Action을 실행함
+
+### 4.3 main 함수에 적용하기
+```ts
+function getNextState(state: AppState, action: Action): AppState {
+  switch (action.type) {
+    case 'newTodo':
+      return {
+        ...state,
+        todos: [...state.todos, new Todo(action.title, action.priority)],
+      };
+    case 'deleteTodo':
+      return {
+        ...state,
+        todos: state.todos.filter(item => item.id !== action.id),
+      };
+  }
+}
+```
+- `deleteTodo` case를 추가하여 Delete 기능을 추가함
+- 여기서 중요한 점은, case로 기능을 나눔으로서 `TypeGuard`가 이루어지고  
+확인해보면 해당 Action의 좁혀진 것을 확인할 수 있음
+
+### 4.4 결과 확인하기
+
+<img width="297" alt="스크린샷 2021-01-03 오후 9 37 40" src="https://user-images.githubusercontent.com/70752848/103478727-07a8a900-4e0c-11eb-9bc0-a998c9497f6c.png">
+
+> d를 입력하여 Delete 기능을 활성화!
+
+<img width="297" alt="스크린샷 2021-01-03 오후 9 37 50" src="https://user-images.githubusercontent.com/70752848/103478729-08413f80-4e0c-11eb-88a2-a4bee2270265.png">
+
+> id를 입력할 수 있으며 해당 id의 Todo가 삭제될 겁니다!
+
+<img width="297" alt="스크린샷 2021-01-03 오후 9 38 03" src="https://user-images.githubusercontent.com/70752848/103478732-0b3c3000-4e0c-11eb-8573-86dca030ebaf.png">
+
+> 다시 초기화면으로 정상적으로 돌아왔고 p를 입력해서 출력해보면!?
+
+<img width="297" alt="스크린샷 2021-01-03 오후 9 38 07" src="https://user-images.githubusercontent.com/70752848/103478733-0bd4c680-4e0c-11eb-875e-26921f90d433.png">
+
+> 짜짠! 입력한 2번 Todo 가 삭제된 것을 볼수 있습니다!

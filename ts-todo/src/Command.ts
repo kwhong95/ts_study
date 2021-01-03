@@ -1,6 +1,7 @@
 import { waitForInput } from "./input";
 import { 
   Action,
+  ActionDeleteTodo,
   ActionNewTodo, 
   AppState, 
   Priority, 
@@ -47,5 +48,23 @@ export class CommandNewTodo extends Command {
   }
   static getIsPriority(priority: number): priority is Priority {
     return getIsVaildEnumValue(Priority, priority);
+  }
+}
+
+export class CommandDeleteTodo extends Command {
+  constructor() {
+    super('d', '할 일 제거하기');
+  }
+  async run(state: AppState): Promise<ActionDeleteTodo| any> {
+    for ( const todo of state.todos ) {
+      const text = todo.toString();
+      console.log(text);
+    }
+    const idStr = await waitForInput('press todo id to delete: ');
+    const id = Number(idStr);
+    return {
+      type: 'deleteTodo',
+      id,
+    };
   }
 }

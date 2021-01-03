@@ -22,4 +22,9 @@ export interface ActionNewTodo {
   priority: Priority;
 };
 
-export type Action = ActionNewTodo;
+export interface ActionDeleteTodo {
+  type: 'deleteTodo';
+  id: number;
+}
+
+export type Action = ActionNewTodo | ActionDeleteTodo ;
